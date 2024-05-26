@@ -5,7 +5,7 @@ include(CTest)
 enable_testing()
 enable_language()
 
-add_executable()
+add_executable(low-latency-trading-system thread_example.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
