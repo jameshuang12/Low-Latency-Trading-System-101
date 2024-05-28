@@ -1,7 +1,3 @@
-//
-// Created by james on 5/23/2024.
-//
-
 #ifndef MACROS_H
 #define MACROS_H
 #include <iostream>
