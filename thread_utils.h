@@ -6,7 +6,7 @@
 #include <atomic>
 #include <thread>
 #include <unistd.h>
-//#include <sys/syscall.h>
+#include <sys/syscall.h>
 
 namespace Common{
     inline auto setThreadCore(int core_id) noexcept {
