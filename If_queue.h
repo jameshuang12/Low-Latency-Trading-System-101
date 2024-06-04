@@ -1,0 +1,8 @@
+//
+// Created by james on 6/3/2024.
+//
+
+#ifndef JAMES_SAFA_PROJECT_IF_QUEUE_H
+#define JAMES_SAFA_PROJECT_IF_QUEUE_H
+
+#endif //JAMES_SAFA_PROJECT_IF_QUEUE_H

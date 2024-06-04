@@ -1,6 +1,3 @@
-#ifndef THREAD_UTILS_H
-#define THREAD_UTILS_H
-
 #pragma once
 #include <iostream>
 #include <atomic>
@@ -48,5 +45,3 @@ inline auto createAndStartThread(int core_id, const std::string &name, T
     }
     return t;
 }
-
-#endif
