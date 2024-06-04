@@ -42,6 +42,7 @@ namespace Common {
         MemPool& operator=(const MemPool&&) = delete;
 
         template<typename... Args>
+
         T *allocate(Args... args) noexcept{
             auto obj_block = &(store_[next_free_index_]);
             ASSERT(obj_block->is_free, "Expected free ObjectBlock at index: "
