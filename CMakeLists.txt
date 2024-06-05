@@ -7,7 +7,7 @@ include(CTest)
 enable_testing()
 enable_language()
 
-add_executable(thread_example.cpp mem_pool_example.cpp)
+add_executable(thread_example.cpp mem_pool_example.cpp lf_queue_example.cpp)
 
 target_link_libraries(Threads::Threads)
 
