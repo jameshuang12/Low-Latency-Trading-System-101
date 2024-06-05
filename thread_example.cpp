@@ -16,7 +16,7 @@ int main(int, char **) {
     auto t1 = createAndStartThread(-1, "dummyFunction1",
                                    dummyFunction, 12, 21, false);
     auto t2 = createAndStartThread(1, "dummyFunction2", dummyFunction,
-                                   15, 21, true);
+                                   15, 51, true);
     std::cout << "main waiting for threads to be done." << std::endl;
     t1->join();
     t2->join();
