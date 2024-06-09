@@ -79,5 +79,73 @@ namespace Common {
                 std::this_thread::sleep_for(10ms);
             }
         }
+        explicit Logger(const std::string &file_name): file_name(file_name), queue_(LOG_QUEUE_SIZE) {
+            file_.open(file_name);
+            ASSERT(file_.is_open(), "Cold not open log file:" + file_name);
+            logger_thread_ = createAndStartThread(-1, "Common/Logger " + file_name_, [this]() {flushQueue(); });
+            ASSERT(logger_thread_ != nullptr, "Failed to start Logger thread.");
+        }
+
+        ~Logger() {
+            std::string time_str;
+            std::cerr << Common::getCurrentTimeStr(&time_str)
+            << "Flushing and closing Logger for " << file_name_ << std::endl;
+
+            while (queue_.size()) {
+                using namespace std::literals::chrono_literals;
+                std::this_thread::sleep_for(1s);
+            }
+            running_ = false;
+            logger_thread_->join();
+
+            file_.close();
+            std::cerr << Common::getCurrentTimeStr(&time_str) << " Logger for "
+            << file_name_ << " exiting." << std::endl;
+        }
+
+        auto pushValue(const LogElement &log_element) noexcept {
+            *(queue_.getNextToWriteTo()) = log_element;
+            queue_.updateWriteIndex();
+        }
+
+        auto pushValue(const char value) noexcept {
+            pushValue(LongElement{LogType::CHAR, {.c=value}});
+        }
+        auto pushValue(const int value) noexcept {
+            pushValue(LongElement{LogType::INTEGER, {.i=value}});
+        }
+        auto pushValue(const long value) noexcept {
+            pushValue(LongElement{LogType::LONG_INTEGER, {.l=value}});
+        }
+        auto pushValue(const long long value) noexcept {
+            pushValue(LongElement{LogType::LONG_LONG_INTEGER, {.ll=value}});
+        }
+        auto pushValue(const unsigned value) noexcept {
+            pushValue(LongElement{LogType::UNSIGNED, {.u=value}});
+        }
+        auto pushValue(const unsigned long value) noexcept {
+            pushValue(LongElement{LogType::UNSIGNED_LONG, {.ul=value}});
+        }
+        auto pushValue(const unsigned long long value) noexcept {
+            pushValue(LongElement{LogType::CHAR, {.ull=value}});
+        }
+        auto pushValue(const float value) noexcept {
+            pushValue(LongElement{LogType::FLOAT, {.f=value}});
+        }
+        auto pushValue(const double  value) noexcept {
+            pushValue(LongElement{LogType::DOUBLE, {.d=value}});
+        }
+        auto pushValue(const char *value) noexcept {
+            while(*value) {
+                pushValue(*value);
+                ++value;
+            }
+        }
+
+        auto pushValue(const std::string &value) noexcept {
+            pushValue(value.c_str());
+        }
+
+
     };
 }
