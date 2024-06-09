@@ -146,6 +146,48 @@ namespace Common {
             pushValue(value.c_str());
         }
 
+        template<typename T, typename... A>
+        auto log(const char *s, const T &value, A... args) noexcept {
+            while (*s) {
+                if (*s == '%') {
+                    if (UNLIKELY(*(s + 1) == '%')) {
+                        ++s;
+                    } else {
+                        pushValue(value);
+                        log(s + 1, args...);
+                        return;
+                    }
+                }
+                pushValue(*s++);
+            }
+            FATAL("extra arguments provided to log()");
+        }
 
+        auto log(const char *s) noexcept {
+            while (*s) {
+                if(*s == '%') {
+                    if (UNLIKELY(*(s+1) == '%')) {
+                        ++s;
+                    } else {
+                        FATAL("missing arguments to log()");
+                    }
+                }
+                pushValue(*s++);
+            }
+        }
+
+        Logger() = delete;
+        Logger(const Logger &) = delete;
+        Logger(const Logger &&) = delete;
+        Logger &operator=(const Logger &) = delete;
+        Logger &operator=(const Logger &&) = delete;
+
+    private:
+        const std::string file_name_;
+        std::ofstream file_;
+
+        LFQueue<LogElement> queue_;
+        std::atomic<bool> running_ = {true};
+        std::thread *logger_thread_ = nullptr;
     };
 }
