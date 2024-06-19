@@ -9,11 +9,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7744bc19-0b23-4c6f-858f-e1514fdfafc0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chapter4/lf_queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/Chapter4/lf_queue.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chapter6/types.h" beforeDir="false" afterPath="$PROJECT_DIR$/Chapter6/types.h" afterDir="false" />
-    </list>
+    <list default="true" id="7744bc19-0b23-4c6f-858f-e1514fdfafc0" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,6 +46,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\james\Documents\Low-Latency-Trading-System-101" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="James_Safa_Project" />
@@ -149,7 +150,7 @@
       <updated>1718680396759</updated>
       <workItem from="1718680397965" duration="243000" />
       <workItem from="1718680704140" duration="996000" />
-      <workItem from="1718764138308" duration="393000" />
+      <workItem from="1718764138308" duration="903000" />
     </task>
     <servers />
   </component>
