@@ -6,7 +6,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7744bc19-0b23-4c6f-858f-e1514fdfafc0" name="Changes" comment="" />
+    <list default="true" id="7744bc19-0b23-4c6f-858f-e1514fdfafc0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Chapter4/lf_queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/Chapter4/lf_queue.h" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,9 +20,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2i2EiAknT5uviaYSZQNUNMxdGO5" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -34,7 +36,12 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "james",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "structure.view.defaults.are.configured": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -136,6 +143,7 @@
       <option name="presentableId" value="Default" />
       <updated>1718680396759</updated>
       <workItem from="1718680397965" duration="243000" />
+      <workItem from="1718680704140" duration="408000" />
     </task>
     <servers />
   </component>
