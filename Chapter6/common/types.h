@@ -6,18 +6,12 @@
 
 namespace Common {
 
-    constexpr size_t
-    ME_MAX_TICKERS = 8;
-    constexpr size_t
-    ME_MAX_CLIENT_UPDATES = 256 * 1024;
-    constexpr size_t
-    ME_MAX_MARKET_UPDATES = 256 * 1024;
-    constexpr size_t
-    ME_MAX_NUM_CLIENTS = 256;
-    constexpr size_t
-    ME_MAX_ORDER_IDS = 1024 * 1024;
-    constexpr size_t
-    ME_MAX_PRICE_LEVELS = 256;
+    constexpr size_t ME_MAX_TICKERS = 8;
+    constexpr size_t ME_MAX_CLIENT_UPDATES = 256 * 1024;
+    constexpr size_t ME_MAX_MARKET_UPDATES = 256 * 1024;
+    constexpr size_t ME_MAX_NUM_CLIENTS = 256;
+    constexpr size_t ME_MAX_ORDER_IDS = 1024 * 1024;
+    constexpr size_t ME_MAX_PRICE_LEVELS = 256;
 
     typedef uint64_t OrderId;
     constexpr auto OrderId_INVALID = std::numeric_limits<OrderId>::max();
@@ -82,8 +76,8 @@ namespace Common {
 
     enum class Side : int8_t {
         INVALID = 0,
-                BUY = 1,
-                SELL = -1
+        BUY = 1,
+        SELL = -1
     };
 
     inline auto sideToString(Side side) -> std::string {
@@ -97,6 +91,4 @@ namespace Common {
         }
         return "UNKNOWN";
     }
-
 }
-
