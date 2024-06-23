@@ -48,7 +48,7 @@ namespace Exchange{
                << "type:" << clientResponseTypeToString(type_)
                << " client:" << clientIdToString(client_id_)
                << " ticker:" << tickerIdToString(ticker_id_)
-               << " oid:" << orderIdToString(client_order_id_)
+               << " oid:" << orderIdToString(order_id_)
                << " side:" << sideToString(side_)
                << " qty:" << qtyToString(qty_)
                << " price:" << priceToString(price_)
