@@ -37,9 +37,4 @@ namespace Exchange{
         volatile bool run_ = false;
 
     };
-
-
-
-
-
 }

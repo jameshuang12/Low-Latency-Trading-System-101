@@ -57,7 +57,5 @@ namespace Exchange{
                 : side_(side), price_(price), first_me_order_(first_me_order), prev_entry_(prev_entry), next_entry_(next_entry)
                 {}
     };
-
     typedef std::array<MEOrdersAtPrice *, ME_MAX_PRICE_LEVELS> OrdersAtPriceHashMap;
-
 }
