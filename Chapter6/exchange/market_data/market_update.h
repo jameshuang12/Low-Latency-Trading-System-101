@@ -41,9 +41,20 @@ namespace Exchange {
 
         auto toString() const {
             std::stringstream ss;
-            ss << "MEMarketUpdate"
-            << " ["
-            << " type:" << market
+            ss  << "MEMarketUpdate"
+                << " ["
+                << " type:" << marketUpdateTypeToString(type_)
+                << " ticker: " << tickerIdToString(ticker_id_)
+                << " oid: " << orderIdToString(order_id_)
+                << " side:" << sideToString(side_)
+                << " qty: " << qytToString(qty_)
+                << " price: " << priceToString(price_)
+                << " priority:" << priortyToString(priority_)
+                << "]";
+            return ss.str();
         }
     };
+
+#pragma pack(pop)
+    typedef Common::LFQueue<Exchange::MEMarketUpdate> MEMarketUpdateLFQueue;
 }
