@@ -3,9 +3,9 @@
 #include <atomic>
 #include <thread>
 #include <unistd.h>
-//#include <pthread.h>
-//#include <sched.h>
-//#include <sys/syscall.h>
+#include <pthread.h>
+#include <sched.h>
+#include <sys/syscall.h>
 
 namespace Common {
     inline auto setThreadCore(int core_id) noexcept {
