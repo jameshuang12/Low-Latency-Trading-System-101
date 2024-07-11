@@ -115,6 +115,79 @@ namespace Exchange {
         }
     }
 
+    auto removeOrdersAtPrice(Side side, Price price) noexcept {
+            const auto best_orders_by_price = (side == Side::BUY ? bids_by_price_ : ask_by_price_);
+            auto orders_at_price = getOrdersAtPrice(price);
 
+            if (UNLIKELY(orders_at_price->next_entry_ == orders_at_price)){
+                (side == Side::BUY ? bids_by_price_ :  ask_by_price_) = nullptr;
+            } else {
+                orders_at_price->prev_entry_->next_entry_ = orders_at_price->next_entry_;
+                orders_at_price->next_entry_->prev_entry_ = orders_at_price->prev_entry_;
+
+                if (orders_at_price == best_orders_by_price) {
+                    (side == Side::BUY ? bids_by_price_ : asks_by_price_) = orders_at_price->next_entry_;
+                }
+                orders_at_price->prev_entry_ = orders_at_price->next_entry_ = nullptr;
+            }
+            price_orders_at_price_.at(priceToIndex(price)) = nullptr;
+            order_at_price_pool_.deallocate(orders_at_price);
+        }
+
+        auto getNextPriority(Price price) noexcept {
+            const auto order_at_price = getOrdersAtPrice(price);
+            if(!order_at_price)
+                return 1lu;
+            return order_at_price->first_me_order_->prev_order_->priority_ + 1;
+        }
+        auto match(TickerId ticker_id, ClientId client_id, Side side, OrderId client_order_id,
+                   OrderId new_market_order_id, MEOrder* bid_itr, Qty* leaves_qty) noexcept;
+
+        auto checkForMatch(ClientId client_id, OrderId client_order_id, TickerID ticker_id, Side side,
+                           Price price, Qty qty, Qty new_market_order_id) noexcept;
+
+        auto removeOrder(MEOrder *order) noexcept {
+            auto order_at_price = getOrdersAtPrice(order->price_);
+            if (order->prev_order_ == order) {
+                removeOrdersAtPrice(order->side_, order->price_);
+            } else {
+                const auto order_before = order->prev_order_;
+                const auto order_after = order->next_order_;
+                order_before->next_order_ = order_after;
+                order_after->prev_order_ = order_before;
+
+                if (order_at_price->first_me_order_ == order){
+                    order_at_price->first_me_order_ = order_after;
+                }
+
+                order->prev_order_ = order->next_order_ = nullptr;
+            }
+
+            cid_oid_to_order_.at(order->client_id_).at(order->client_order_id_) = nullptr;
+            order_pool_.deallocate(order);
+        }
+
+        auto addOrder(MEOrder *order) noexcept {
+            const auto order_at_price = getOrdersAtPrice(order->price_);
+            if (!order_at_price) {
+                order->next_order_ = order->prev_order_= order;
+
+                auto new_orders_at_price = order_at_price_pool_.allocate(order->side_, order->price_
+                order, nullptr, nullptr);
+
+                addOrdersAtPrice(new_orders_at_price);
+            } else {
+                auto first_order = (order_at_price ? order_at_price->first_me_order_ : nullptr);
+
+                first_order->prev_order_->next_order_ = order;
+                order->prev_order_ = first_order->prev_order_;
+                order->next_order_  = first_order;
+                first_order->prev_order_ = order;
+            }
+
+            cid_oid_to_order_.at(order->client_id_).at(order->client_order_id_) = order;
+        }
     };
+
+    typedef std::array<MEOrderBook *, ME_MAX_TICKERS> OrderBookHashMap;
 }
