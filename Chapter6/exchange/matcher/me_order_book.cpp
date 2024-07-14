@@ -79,4 +79,12 @@ namespace Exchange {
         }
         return leaves_qty;
     }
+
+    auto MEOrderBook::add(ClientId client_id, OrderId client_order_id, TickerId ticker_id, Side side,
+                          Price price, Qty qty) noexcept -> void {
+        const auto new_market_order_id = generateNewMarketOrderId();
+        client_response_ = {ClientResponseType::ACCEPTED, client_id, ticker_id,
+                            client_order_id, new_market_order_id, side, price, 0 ,qty};
+
+    }
 }
