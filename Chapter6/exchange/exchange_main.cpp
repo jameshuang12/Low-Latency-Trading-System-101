@@ -33,6 +33,6 @@ int main(int, char **) {
     while (true) {
         logger->log("%:% %() % Sleeping for a few milliseconds..\n", __FILE__, __LINE__, __FUNCTION__,
                     Common::getCurrentTimeStr(&time_str));
-        usleep(sleep * 1000);
+        usleep(sleep_time * 1000);
     }
 }
