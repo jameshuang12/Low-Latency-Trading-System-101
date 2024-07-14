@@ -101,5 +101,96 @@ namespace Exchange {
         }
     }
 
+    auto MEOrderBook::cancel(ClientID client_id, OrderId order_id, TickerId ticker_id) noexcept -> void {
+        auto is_cancelable = (client_id < cid_oid_to_order_.size());
+        MEOrder *exchange_order = nullptr;
+        if (LIKELY(is_cancelable)) {
+            auto &co_itr = cid_oid_to_order_.at(client_id);
+            exchange_order = co_itr.at(order_id);
+            is_cancelable = (exchange_order != nullptr);
+        }
+        if (UNLIKELY(is_cancelable)) {
+            client_response_ = {ClientResponseType::CANCELED_REJECTED, client_id, ticker_id,
+                                order_id, OrderId_INVALID, Side::INVALID, Price_INVALID,
+                                Qty_INVALID, Qty_INVALID};
+        } else {
+            client_response_ = {ClientResponseType::CANCELED, client_id,
+                                ticker_id, order_id, exchange_order->market_order_id_,
+                                exchange_order->side_, exchange_order->price_, Qty_INVALID, exchange_order->qty_};
+            market_update_ = {MarketUpdateType::CANCEL, exchange_order->market_order_id_, ticker_id,
+                              exchange_order->side_, exchange_order->price_, 0, exchange_order->priority_};
+            removeOrder(exchange_order);
+            matching_engine_->sendMarketUpdate(&market_update_);
+        }
+        matching_engine_->sendClientResponse(&client_response_);
+    }
 
+    auto MEOrderBook::toString(bool detailed, bool validity_check) const -> std::string {
+        std::stringstream ss;
+        std::string time_str;
+
+        auto printer = [&](std::stringstream  &ss, MEOrdersAtPrice *itr, Side side, Price &last_price,
+                bool sanity_check) {
+            char buf[4096];
+            Qty qty = 0;
+            size_t num_orders = 0;
+
+            for (auto o_itr = itr->first_me_order_;; o_itr = o_itr->next_order_) {
+                qty += o_itr->qty_;
+                ++num_orders;
+                if(o_itr->next_order_ == itr->first_me_order_)
+                    break;
+            }
+            sprintf(buf, " <px:%3s p:%3s n:%3s> %-3s @ %-5s(%-4s)",
+                    priceToString(itr->price_).c_str(), priceToString(itr->prev_entry_->price_).c_str(), priceToString(itr->next_entry_->price_).c_str(),
+                    priceToString(itr->price_).c_str(), qtyToString(qty).c_str(), std::to_string(num_orders).c_str());
+            ss << buf;
+
+            for (auto o_itr = itr->first_me_order_;; o_itr= o_itr->next_order_){
+                if (detailed) {
+                    sprintf(buf, "[old:%s q:%s p:%s n:%s] ",
+                            orderIdToString(o_itr->market_order_id_).c_str(), qtyToString(o_itr->qty_).c_str(),
+                            orderIdToString(o_itr->prev_order_ ? o_itr->prev_order_->market_order_id_ :
+                            OrderId_INVALID.c_str(), orderIdToString(o_itr->next_order_ ?
+                            o_itr->next_order_->market_order_id_ : OrderId_INVALID).c_str());
+                    ss << buf;
+                }
+                if (o_itr->next_order_ == itr->first_me_order_)
+                    break;
+            }
+            ss << std::endl;
+
+            if(sanity_check) {
+                if ((side == Side::SELL && last_price >= itr->price_) ||
+                        (side == Side::BUY && last_price <= itr->price_)) {
+                    FATAL("Bids/Asks not sorted by ascending/descending prices last:"
+                    + priceToString(last_price) + " itr:" + itr->toString());
+                }
+                last_price = itr->price_;
+            }
+        };
+        ss << "Ticker:" << tickerIdToString(ticker_id_) << std::endl;
+        {
+            auto ask_itr = ask_by_price_;
+            auto last_ask_price = std::numeric_limits<Price>::min();
+            for (size_t count = 0; ask_itr; ++count) {
+                ss << "ASKS L:" << count << " => ";
+                auto next_ask_itr = (ask_itr->next_entry_ == ask_by_price_ ? nullptr : ask_itr->next_entry_);
+                printer(ss, ask_itr, Side::SELL, last_ask_price, validity_check);
+                ask_itr = next_ask_itr;
+            }
+        }
+        ss << std::endl << "                          X" << std::endl << std::endl;
+        {
+            auto bid_itr = bids_by_price_;
+            auto last_bid_price = std::numeric_limits<Price>::max();
+            for (size_t count = 0; bid_itr; ++count) {
+                ss << "BIDS L:" << count << " => ";
+                auto next_bid_itr = (bid_itr->next_entry_ == bids_by_price_ ? nullptr: bid_itr->next_entry_);
+                printer(ss, bid_itr, Side::BUY, last_bid_price, validity_check);
+                bid_itr = next_bid_itr;
+            }
+        }
+        return ss.str();
+    }
 }
