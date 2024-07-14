@@ -85,6 +85,21 @@ namespace Exchange {
         const auto new_market_order_id = generateNewMarketOrderId();
         client_response_ = {ClientResponseType::ACCEPTED, client_id, ticker_id,
                             client_order_id, new_market_order_id, side, price, 0 ,qty};
+        matching_engine_->sendClientResponse(&client_response_);
 
+        const auto leaves_qty = checkForMatch(client_id, client_order_id, ticker_id, side,
+                                              price, qty, new_market_order_id);
+
+        if (LIKELY(leaves_qty)) {
+            const auto priority = getNextPriority(price);
+            auto order = order_pool_.allocate(ticker_id, client_id, client_order_id, new_market_order_id,
+                                              side, price, leaves_qty, priority, nullptr, nullptr);
+
+            addOrder(order);
+            market_update_ = {MarketUpdateType::ADD, new_market_order_id, ticker_id, side, price, leaves_qty, priority};
+            matching_engine_->sendMarketUpdate(&market_update_);
+        }
     }
+
+
 }
