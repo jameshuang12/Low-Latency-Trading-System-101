@@ -41,4 +41,49 @@ namespace Exchange {
 
 #pragma pack(push, 1)
 
+struct MEMarketUpdate {
+        MarketUpdateType type_ = MarketUpdateType::INVALID;
+
+        OrderID order_id_ = OrderId_INVALID;
+        TickerID tickerId_ = TickerId_INVALID;
+        Side side_ = Side::INVALID;
+        Price price_ = Price_INVALID;
+        Qty qty_ = Qty_INVALID;
+        Priority priority_ = Priority_INVALID;
+
+        auto toString() const {
+            std::stringstream ss;
+            ss << "MEMarketUpdate"
+            << " ["
+            << " type:" << marketUpdateTypeToString(type_)
+            << " ticker:" << tickerIdToString(tickerId_)
+            << " old:" << orderIdToString(order_id_)
+            << " side:" << sideToString(side_)
+            << " qty:" << qtyToString(qty_)
+            << " price:" << priceToString(price_)
+            << " priority:" << priorityToString(priority_)
+            << "]";
+            return ss.str();
+        }
+    };
+
+    struct MDPMarketUpdate {
+        size_t seq_num_ = 0;
+        MEMarketUpdate me_market_update_;
+
+        auto toString() const {
+            std::stringstream ss;
+            ss << "MDPMarketUpdate"
+            << "["
+            << "seq:" << seq_num_
+            << " " << me_market_update_.toString()
+            << "]";
+            return ss.str();
+        }
+    }
+#pragma pack(pop)
+
+    typedef Common::LFQueue<Exchange::MEMarketUpdate> MEMarketUpdateLFQueue;
+    typedef Common::LFQueue<Exchange::MDPMarketUpdate> MDPMarketUpdateLFQueue;
+
 }
