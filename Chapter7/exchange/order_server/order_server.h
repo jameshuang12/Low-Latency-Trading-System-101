@@ -75,7 +75,42 @@ namespace Exchange {
                     ++next_exp_seq_num;
                     fifo_sequencer_.addClientRequest(rx_time, request->me_client_request_);
                 }
+                memcpy(socket->inbound_data_.data(), socket->inbound_data_.data() + i, socket->next_rcv_valid_index_ - i);
+                socket->next_rcv_valid_index_ -= i;
             }
         }
+
+        auto recvFinishedCallback() noexcept {
+            fifo_sequencer_.sequenceAndPublish();
+        }
+
+        OrderServer() = delete;
+
+        OrderServer(const OrderServer &) = delete;
+
+        OrderServer(const OrderServer &&) = delete;
+
+        OrderServer &operator=(const OrderServer &) = delete;
+
+        OrderServer &operator=(const OrderServer &&) = delete;
+
+
+    private:
+        const std::string iface_;
+        const int port_ = 0;
+
+        ClientResponseLFQueue *outgoing_responses_ = nullptr;
+
+        volatile bool run_ = false;
+
+        std::string time_str_;
+        Logger logger_;
+
+        std::array<size_t, ME_MAX_NUM_CLIENTS> cid_next_outgoing_seq_num_;
+        std::array<size_t, ME_MAX_NUM_CLIENTS> cid_next_exp_seq_num;
+        std::array<Common::TCPSocket *, ME_MAX_NUM_CLIENTS> cid_tcp_socket_;
+
+        Common::TCPServer tcp_server_;
+        FIFOSequencer fifo_sequencer_;
     };
 }
