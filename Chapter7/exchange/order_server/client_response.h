@@ -78,8 +78,8 @@ namespace Exchange {
             return ss.str();
         }
     }
+
 #pragma pack(pop)
 
     typedef Common::LFQueue<Exchange::MEClientResponse> ClientResponseLFQueue;
-
 }
