@@ -43,5 +43,31 @@ namespace Exchange {
 
             pending_size_= 0;
         }
+        FIFOSequencer() = delete;
+
+        FIFOSequencer(const FIFOSequencer &) = delete;
+
+        FIFOSequencer(const FIFOSequencer &&) = delete;
+
+        FIFOSequencer &operator=(const FIFOSequencer &) = delete;
+
+        FIFOSequencer &operator=(const FIFOSequencer &&) = delete;
+
+    private:
+        ClientRequestLFQueue *incoming_requests_ = nullptr;
+
+        std::string time_str_;
+        Logger *logger_ = nullptr;
+
+        struct RecvTimeClientRequest {
+            Nanos recv_time_ = 0;
+            MEClientRequest request_;
+
+            auto operator<(const RecvTimeClientRequest &rhs) const {
+                return (recv_time_ < rhs.recv_time_);
+            }
+        };
+        std::array<RecvTimeClientRequest, ME_MAX_PENDING_REQUESTS> pending_client_requests_;
+        size_t pending_size_ = 0;
     };
 }
