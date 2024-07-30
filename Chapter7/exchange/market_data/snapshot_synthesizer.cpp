@@ -29,8 +29,15 @@ namespace Exchange {
     auto SnapshotSynthesizer::addToSnapshot(const MDPMarketUpdate *market_update) {
         const auto &me_market_update = market_update->me_market_update;
         auto *orders = &ticket_orders_.at(me_market_update.ticker_id_);
-        swich(me_market_update.type_) {
+        switch(me_market_update.type_) {
             case MarketUpdateType::ADD: {
+                auto order = orders->at(me_market_update.order_id_);
+                ASSERT(order == nullptr, "Received:" + me_market_update.toString() + " but order already exists:" +
+                (order ? order->toString() : ""));
+                orders->at(me_market_update.order_id_) = order_pool_.allocate(me_market_update);
+            }
+            break;
+            case marketUpdateType::MODIFY: {
 
             }
         }
