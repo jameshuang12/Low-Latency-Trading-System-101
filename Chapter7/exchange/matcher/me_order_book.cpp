@@ -5,5 +5,11 @@
 namespace Exchange {
     MEOrderBook::MEOrderBook(TickerId ticker_id, Logger *logger, Exchange::MatchingEngine *matching_engine)
             : ticker_id_(ticker_id), matching_engine_(matching_engine), orders_at_price_pool(ME_MAX_PRICE_LEVELS),
-              order_pool_(ME_MAX_ORDER_IDS), logger_(logger){}
+              order_pool_(ME_MAX_ORDER_IDS), logger_(logger) {
+    }
+
+    MEOrderBook::~MEOrderBook() {
+        logger_->log("%:% %() % OrderBook\n%\n", __FILE__, __LINE__, __FUNCTION__, Common::getCurrentTImeStr(&time_str_),
+                     toString(false, true));
+    }
 }
