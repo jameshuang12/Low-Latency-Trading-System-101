@@ -195,6 +195,5 @@ namespace Exchange {
             cid_oid_to_order_.at(order->client_id_).at(order->client_order_id_) = order;
         }
     };
-
     typedef std::array<MEOrderBook *, ME_MAX_TICKERS> OrderBookHashMap;
 }
