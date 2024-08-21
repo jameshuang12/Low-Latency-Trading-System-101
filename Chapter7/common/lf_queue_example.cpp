@@ -25,5 +25,22 @@ auto consumeFunction(LFQueue<MyStruct>* lfq) {
 }
 
 int main(int, char **) {
-    ;
+    LFQueue<MyStruct> lfq(20);
+    auto ct = createAndStartThread(-1, "", consumeFunction, &lfq);
+
+    for (auto i = 0; i < 50; ++i) {
+        const MyStruct d(i, i * 10, i * 100);
+        *(lfq.getNextToWriteTo()) = d;
+        lfq.updateWriteIndex();
+
+        std::cout << "main constructed elem:" << d.d_[0] << "," << d.d_[1] << ","
+        << d.d_[2] << " lfq-size:" << lfq.size() << std::endl;
+
+        using namespce std::literals::chrono_literals;
+        std::this_thread::sleep_for(1s);
+    }
+    ct->join();
+    std::cout << "main exiting." << std::endl;
+
+    return 0;
 }
