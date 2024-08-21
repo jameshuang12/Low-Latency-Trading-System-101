@@ -1,0 +1,14 @@
+//
+// Created by james on 8/21/2024.
+//
+
+#ifndef LOW_LATENCY_TRADING_SYSTEM_101_LOGGING_H
+#define LOW_LATENCY_TRADING_SYSTEM_101_LOGGING_H
+
+
+class logging {
+
+};
+
+
+#endif //LOW_LATENCY_TRADING_SYSTEM_101_LOGGING_H
