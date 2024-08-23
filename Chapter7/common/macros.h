@@ -1,0 +1,14 @@
+//
+// Created by james on 8/22/2024.
+//
+
+#ifndef LOW_LATENCY_TRADING_SYSTEM_101_MACROS_H
+#define LOW_LATENCY_TRADING_SYSTEM_101_MACROS_H
+
+
+class macros {
+
+};
+
+
+#endif //LOW_LATENCY_TRADING_SYSTEM_101_MACROS_H
