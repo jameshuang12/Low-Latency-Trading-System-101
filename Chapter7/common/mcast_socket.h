@@ -1,0 +1,14 @@
+//
+// Created by james on 8/22/2024.
+//
+
+#ifndef LOW_LATENCY_TRADING_SYSTEM_101_MCAST_SOCKET_H
+#define LOW_LATENCY_TRADING_SYSTEM_101_MCAST_SOCKET_H
+
+
+class mcast_socket {
+
+};
+
+
+#endif //LOW_LATENCY_TRADING_SYSTEM_101_MCAST_SOCKET_H
